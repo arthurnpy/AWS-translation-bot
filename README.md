@@ -5,7 +5,7 @@ This project is a serverless multi-language translation chatbot built on AWS.
 
 Here’s a quick look at my **AWS Translation Bot** in action:  
 
-![Bot Demo](assets/demo.gif)  
+![Bot Demo](ezgif-541473e3259111.gif)  
 
 👉 [Watch the full demo on YouTube](https://youtu.be/yBXSPX7Dyuk)
 ## Architecture
