@@ -1,4 +1,4 @@
-# supreme-memory
+# AWS Translation Bot
 This project is a serverless multi-language translation chatbot built on AWS. 
 
 ## 🎥 Demo
