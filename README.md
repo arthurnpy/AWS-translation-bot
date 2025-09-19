@@ -4,23 +4,18 @@ A serverless project that analyzes images using Amazon Rekognition and displays 
 
 ⚙️ Architecture
 
-   [ User ]
-      │
-      ▼
-  ┌────────────┐       ┌──────────────┐
-  │ CloudFront │──────▶│ Website S3   │ (HTML, CSS, JS)
-  │ Behaviors  │       └──────────────┘
-  │            │──────▶│ Data S3      │ (uploads/, results/)
-  └────────────┘       └──────────────┘
-         │
-         │ S3 event
-         ▼
-     ┌────────┐
-     │ Lambda │───▶ Amazon Rekognition
-     └────────┘
-         │
-         └──▶ writes results/ + latest.json
+User (Browser) 
+   → Amazon CloudFront (OAC) 
+      → S3 (Website Bucket: index.html, script.js, style.css)
 
+User Upload (Image) 
+   → S3 (Data Bucket: uploads/) 
+      → S3 Event Trigger 
+         → AWS Lambda (Python) 
+            → Amazon Rekognition (Label Detection) 
+               → S3 (Data Bucket: results/ + latest.json) 
+                  → Served back via CloudFront 
+                     → User sees Image + Labels
 
 Services Used:
 
