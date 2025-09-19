@@ -1,82 +1,48 @@
-🖼️ AWS Image Analyzer with Rekognition
+This project is a serverless multi-language translation chatbot built on AWS. 
 
-A serverless project that analyzes images using Amazon Rekognition and displays the results on a static website. Built to practice AWS cloud services, serverless pipelines, and computer vision.
+## 🎥 Demo
 
-⚙️ Architecture
+Here’s a quick look at my **AWS Translation Bot** in action:  
 
-User (Browser) 
-   → Amazon CloudFront (OAC) 
-      → S3 (Website Bucket: index.html, script.js, style.css)
+![Bot Demo](assets/demo.gif)  
 
-User Upload (Image) 
-   → S3 (Data Bucket: uploads/) 
-      → S3 Event Trigger 
-         → AWS Lambda (Python) 
-            → Amazon Rekognition (Label Detection) 
-               → S3 (Data Bucket: results/ + latest.json) 
-                  → Served back via CloudFront 
-                     → User sees Image + Labels
+👉 [Watch the full demo on YouTube](https://youtu.be/yBXSPX7Dyuk)
+## Architecture
 
-Services Used:
+User → Amazon Lex V2 → AWS Lambda (Python) → Amazon Translate → Response back to Lex → User
+                   ↘︎ CloudWatch Logs (Monitoring)
+The solution leverages a fully serverless design:
 
-Amazon S3 → store website, uploads, and JSON results
+1. **Amazon Lex V2** – Captures user input, interprets intents, and triggers fulfillment.  
+2. **AWS Lambda (Python 3.12)** – Acts as the fulfillment code hook. Handles slot data, invokes Amazon Translate, and returns translated text back to Lex.  
+3. **Amazon Translate** – Provides language translation service.  
+4. **Amazon CloudWatch** – Logs events, errors, and metrics for debugging and monitoring.  
+5. **IAM Roles & Policies** – Securely allow Lex to invoke Lambda and Lambda to call Amazon Translate.
 
-AWS Lambda → triggered on image upload, calls Rekognition, writes results
+6. ## Features
+- **Natural Language Understanding** with Lex intents and slots.
+- **Custom Lambda Fulfillment** written in Python.
+- **Multi-language Translation** using Amazon Translate API.
+- **Cloud-native, serverless** and scalable design.
+- **Error Handling & Logging** integrated with CloudWatch.
 
-Amazon Rekognition → label/object detection
+## Tech Stack
+- **AWS Services**: Amazon Lex V2, AWS Lambda, Amazon Translate, IAM, CloudWatch  
+- **Language**: Python 3.12  
+- **Infrastructure**: Serverless (fully managed AWS services)  
 
-Amazon CloudFront → global CDN + HTTPS for static website
+## Setup
+1. **Create Lambda Function**  
+   - Runtime: Python 3.12  
+   - Add permissions: `TranslateText`, `CloudWatch Logs`, and allow Lex to invoke.  
 
-IAM / OAC → secure access between CloudFront and private S3 buckets
+2. **Deploy Lambda Code**  
+   Upload the `lambda_function.py` (see code in repo).  
 
-Flow:
+3. **Configure Amazon Lex**  
+   - Create a bot with an intent (`TranslateText`).  
+   - Add slots: `Text`, `LanguageCode`.  
+   - Enable fulfillment with the Lambda function.  
 
-Upload an image → stored in uploads/ folder of the data bucket.
-
-S3 event triggers Lambda.
-
-Lambda calls Rekognition → saves results as JSON in results/.
-
-Lambda also updates latest.json → always points to most recent file.
-
-Static website fetches latest.json and displays image + labels.
-
-📂 Bucket Setup
-
-Website Bucket (image-analyzer-website):
-
-index.html, style.css, script.js
-
-Data Bucket (vid-image-scan):
-
-/uploads/ → uploaded images
-
-/results/ → Rekognition output JSON
-
-CloudFront Behaviors:
-
-* → website bucket
-
-/uploads/* → data bucket
-
-/results/* → data bucket
-
-
-🔐 Security
-
-Buckets are private (no public access).
-
-Access controlled with CloudFront Origin Access Control (OAC).
-
-
-🎯 Key Learnings
-
-Connecting S3 + Lambda + Rekognition into a serverless workflow.
-
-Using CloudFront behaviors to serve static website + dynamic data.
-
-Enforcing private access with OAC instead of public buckets.
-
-📌 Links
-🔗 youtube Demo :https://youtu.be/GPMW1rLMY1U
-🔗 web Demo: d2dndqfio8c53w.cloudfront.net
+4. **Test & Debug**  
+   Use the Lex test console. Monitor errors via **CloudWatch Logs**.
