@@ -66,27 +66,6 @@ CloudFront Behaviors:
 
 /results/* → data bucket
 
-🖥️ Frontend
-
-index.html (simplified):
-<img id="image" src="" alt="Uploaded Image">
-<ul id="labels"></ul>
-<script src="script.js"></script>
-
-script.js:
-const CLOUDFRONT_DOMAIN = "https://d2dndqfio8c53w.cloudfront.net";
-
-fetch(`${CLOUDFRONT_DOMAIN}/results/latest.json`)
-  .then(res => res.json())
-  .then(data => {
-    document.getElementById("image").src = `${CLOUDFRONT_DOMAIN}/${data.File}`;
-    let list = document.getElementById("labels");
-    data.Labels.forEach(l => {
-      let li = document.createElement("li");
-      li.textContent = `${l.Name} (${l.Confidence}%)`;
-      list.appendChild(li);
-    });
-  });
 
 🔐 Security
 
